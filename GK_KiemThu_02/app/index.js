@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const userRoutes = require("./routers/user.router");
 
 const connectDB = async () => {
   try {
@@ -26,6 +27,7 @@ connectDB();
 const app = express();
 app.use(express.json());
 // app.use("/api/user", userRoutes);
+app.use("/api/user", userRoutes);
 
 const PORT = 5000;
 
