@@ -31,18 +31,34 @@ const PostUser = async (req, res) => {
       msg: "Vui lòng nhập đầy đủ thông tin",
     });
   } else {
-    let user = new User({
-      avatar: req.body.avatar,
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
-      phone: req.body.phone,
-      sex: req.body.sex,
-      address: req.body.address,
-    });
-    // Save user
-    await user.save();
-    res.status(201).json({ msg: "Thêm thành công User", user });
+    User.findOne(
+      { $or: [{ email: email }, { username: username }] },
+      function (err, data) {
+        if (err) {
+          res.json({
+            message: "Error",
+          });
+        }
+        if (data) {
+          res.json({
+            message: "User Đã Tồn Tại",
+          });
+        } else {
+          let user = new User({
+            avatar: req.body.avatar,
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password,
+            phone: req.body.phone,
+            sex: req.body.sex,
+            address: req.body.address,
+          });
+          // Save user
+          user.save();
+          res.status(201).json({ msg: "Thêm thành công User", user });
+        }
+      }
+    );
   }
 };
 
